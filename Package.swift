@@ -4,21 +4,42 @@
 import PackageDescription
 
 let package = Package(
-    name: "ErrorsSuite",
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "ErrorsSuite",
-            targets: ["ErrorsSuite"]),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "ErrorsSuite"),
-        .testTarget(
-            name: "ErrorsSuiteTests",
-            dependencies: ["ErrorsSuite"]
-        ),
-    ]
+  name: "errors-suite",
+  platforms: [
+    .iOS(.v17),
+    .tvOS(.v17),
+    .macOS(.v14),
+    .watchOS(.v10),
+    .visionOS(.v1),
+  ],
+  products: [
+    .library(name: "ErrorsSuite", targets: ["ErrorsSuite"]),
+    
+    .library(name: "NetworkErrorsPack", targets: ["NetworkErrorsPack"]),
+    .library(name: "HttpStatus", targets: ["HttpStatus"]),
+    .library(name: "CommonErrorsPack", targets: ["CommonErrorsPack"]),
+    .library(name: "BaseError", targets: ["BaseError"]),
+  ],
+  dependencies: [
+    .package(url: "https://github.com/iDmitriyy/SwiftyKit.git", branch: "main"),
+  ],
+  targets: [
+    .target(name: "ErrorsSuite", dependencies: [.target(name: "NetworkErrorsPack"),
+                                                .target(name: "HttpStatus"),
+                                                .target(name: "CommonErrorsPack"),
+                                                .target(name: "BaseError"),
+                                                .product(name: "SwiftyKit", package: "SwiftyKit")]),
+    // TODO: import only needed parts of SwiftyKit later
+    .target(name: "NetworkErrorsPack", dependencies: [.target(name: "HttpStatus"),
+                                                      .target(name: "BaseError"),
+                                                      .product(name: "SwiftyKit", package: "SwiftyKit")]),
+    .target(name: "HttpStatus", dependencies: [.product(name: "SwiftyKit", package: "SwiftyKit")]),
+    .target(name: "CommonErrorsPack", dependencies: [.target(name: "BaseError"),
+                                                     .product(name: "SwiftyKit", package: "SwiftyKit")]),
+    .target(name: "BaseError", dependencies: [.product(name: "SwiftyKit", package: "SwiftyKit")]),
+    
+    // MARK: - Test Targets
+    
+    .testTarget(name: "ErrorsSuiteTests", dependencies: ["ErrorsSuite"]),
+  ]
 )

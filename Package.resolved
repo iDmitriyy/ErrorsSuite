@@ -1,0 +1,51 @@
+{
+  "originHash" : "0cd5d2a72fa86a0c0ba2e495b605d1952bb632e3c39da9abe1f2fc5e236fbb7f",
+  "pins" : [
+    {
+      "identity" : "swift-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-algorithms.git",
+      "state" : {
+        "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
+        "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
+        "version" : "1.1.4"
+      }
+    },
+    {
+      "identity" : "swift-nonempty",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-nonempty.git",
+      "state" : {
+        "revision" : "1fd3f067ebc3900d200aa7e977fdb614cc5533bc",
+        "version" : "0.5.0"
+      }
+    },
+    {
+      "identity" : "swift-numerics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-numerics.git",
+      "state" : {
+        "revision" : "e0ec0f5f3af6f3e4d5e7a19d2af26b481acb6ba8",
+        "version" : "1.0.3"
+      }
+    },
+    {
+      "identity" : "swiftykit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/iDmitriyy/SwiftyKit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "242bace85f92aab42be8b0ffb9bc97acf2b7aec3"
+      }
+    }
+  ],
+  "version" : 3
+}
