@@ -7,6 +7,8 @@
 
 private import class Foundation.NSLock
 
+internal typealias Settings = BaseErrorSettings
+
 public struct BaseErrorSettings: Sendable {
   public var errorInfoLimit: ErrorInfoLimit = .bytes(.max)
   
@@ -16,7 +18,7 @@ public struct BaseErrorSettings: Sendable {
 }
 
 extension BaseErrorSettings {
-  internal static let shared: Self = lock.withLock {
+  public static let shared: Self = lock.withLock {
     mutableInitialConfig
   }
   

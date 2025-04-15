@@ -43,3 +43,11 @@ let package = Package(
     .testTarget(name: "ErrorsSuiteTests", dependencies: ["ErrorsSuite"]),
   ]
 )
+
+for target: PackageDescription.Target in package.targets {
+  {
+    var settings: [PackageDescription.SwiftSetting] = $0 ?? []
+    settings.append(.enableUpcomingFeature("InternalImportsByDefault"))
+    $0 = settings
+  }(&target.swiftSettings)
+}
