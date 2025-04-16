@@ -13,7 +13,7 @@ public final class URLSessionError: ConcreteBaseError {
   
   public let errorCode: URLSessionErrorCode
   
-  /// Always nil, because NSUrlError is a root error
+  /// Often nil, because NSUrlError is typically a root error.
   public let underlying: (any BaseError)?
   
   public let primaryInfo: ErrorInfo
@@ -27,7 +27,7 @@ public final class URLSessionError: ConcreteBaseError {
   public let providesCodeChain: Bool
   
   public init(errorCode: URLSessionErrorCode,
-              underlying: (any BaseError)?,
+              underlying: (any BaseError)? = nil,
               primaryInfo: ErrorInfo = [:],
               info: ErrorInfo = [:],
               file: StaticString = #fileID,
