@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import Functions
 import HttpStatus
+private import SwiftyKit
 
 /// Ошибка маппинга уровня сетевого слоя
 public final class NetworkMappingError: ConcreteBaseError {

@@ -5,7 +5,7 @@
 //  Created by Dmitriy Ignatyev on 14.12.2024.
 //
 
-import func Functions.mutate
+private import SwiftyKit
 
 /// Ошибка маппинга, которую можно throw'ить в Decodeable / Encodable методах.
 public final class JsonMappingError: ConcreteBaseError {

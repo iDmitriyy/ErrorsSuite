@@ -6,7 +6,7 @@
 //
 
 import HttpStatus
-import Functions
+private import SwiftyKit
 
 public final class HttpStatusError: ConcreteBaseError {
   public let domainShortCode: String = "HT" // Http

@@ -6,7 +6,7 @@
 //
 
 import struct Foundation.Data
-import func Functions.mutate
+private import SwiftyKit
 
 /// Ошибка маппинга данных. Например, при преобразовании сетевого DTO в доменную модель, или преобразовании Int числа в доменный enum.
 public final class MappingError: ConcreteBaseError {

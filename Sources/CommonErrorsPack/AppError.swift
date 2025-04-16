@@ -5,7 +5,7 @@
 //  Created by Dmitriy Ignatyev on 14.12.2024.
 //
 
-import func Functions.mutate
+private import SwiftyKit
 
 /// Внутренняя ошибка приложения. Подходит для случаев, когда её нужно показать пользователю.
 /// По больше части предназначена для использования в Interactor'ах и иногда впровайдерах.

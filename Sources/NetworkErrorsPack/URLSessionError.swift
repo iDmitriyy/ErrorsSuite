@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Functions
+private import SwiftyKit
 
 public final class URLSessionError: ConcreteBaseError {
   public let domainShortCode: String = "NU" // NsUrl

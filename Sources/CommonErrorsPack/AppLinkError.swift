@@ -6,7 +6,7 @@
 //
 
 import struct Foundation.URL
-import func Functions.mutate
+private import SwiftyKit
 
 /// Ошибка связанная с созданием URL'ов, DeepLink'ов и UniversalLink'ов.
 public final class AppLinkError: ConcreteBaseError {
