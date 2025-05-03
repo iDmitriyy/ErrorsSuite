@@ -111,7 +111,9 @@ public enum ConditionalErrorCode: Int, BaseErrorCode {
   case unexpectedSequenceCount = 21
   case unexpectedValueInSequence = 22
   case valueCollision = 51
-  case elementDuplicated = 54
+  case duplicatedElement = 52
+  case duplicatedObject = 53
+  case duplicatedValue = 54
   
   // MARK: Unexpected
   case unexpectedNilValue = 30
@@ -128,14 +130,14 @@ public enum ConditionalErrorCode: Int, BaseErrorCode {
   case objectInitFailed = 42
   case notEqualValues = 43
   case notEqualObjects = 44
+  case notEqualElements = 45
   
   // MARK: Execution flow
-  case unexpectedCodeEntrance = 50
-  case mainThreadViolation = 53
-  
-  case inappropriateConditions = 52
-  
-  case excessOfLimit = 12
   
   case invalidState = 70
+  case inappropriateConditions = 71
+  case unexpectedCodeEntrance = 72
+  case excessOfLimit = 73
+  
+  case mainThreadViolation = 90
 }
