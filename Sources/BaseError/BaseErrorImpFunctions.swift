@@ -350,7 +350,7 @@ extension BaseErrorImpFunctions {
       ErrorInfo.merge(codableErrorInfo, to: &outerErrorInfo)
     }
     
-    func getCodableErrorInfo() -> ErrorInfo { ErrorInfo(legacyUserInfo: codableError._userInfo as? [String: Any] ?? [:]) }
+    func getCodableErrorInfo() -> ErrorInfo { ErrorInfo(legacyUserInfo: (codableError._userInfo as? [String: Any]) ?? [:]) }
     
     let debugMessage: (key: String, message: String)?
     if let decodingError = codableError as? DecodingError {

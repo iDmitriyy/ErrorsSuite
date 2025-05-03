@@ -1,5 +1,5 @@
 {
-  "originHash" : "0cd5d2a72fa86a0c0ba2e495b605d1952bb632e3c39da9abe1f2fc5e236fbb7f",
+  "originHash" : "68658fc5ff2ad76b70352e863b1d9f9150f323d1cb7aa7e5ebea32aa4d0ab25d",
   "pins" : [
     {
       "identity" : "swift-algorithms",
@@ -43,7 +43,7 @@
       "location" : "https://github.com/iDmitriyy/SwiftyKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "242bace85f92aab42be8b0ffb9bc97acf2b7aec3"
+        "revision" : "3a599b6efb230bc7bbab58d59a81e8b186b3ad57"
       }
     }
   ],

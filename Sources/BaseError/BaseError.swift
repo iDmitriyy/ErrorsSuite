@@ -7,8 +7,10 @@
 
 internal import protocol SwiftyKit.DictionaryUnifyingProtocol
 internal import protocol SwiftyKit.Namespacing
+internal import protocol SwiftyKit.InformativeError
 private import struct Collections.OrderedDictionary
 private import FoundationExtensions
+import Algorithms
 
 /// Base error provide detailed information in comparison with Swift.Error.
 /// Base errors can be chained with each other.
@@ -18,7 +20,7 @@ private import FoundationExtensions
 /// If error can not be handled in a layer, it is propagated to a higher level where it is possible to handle it.
 /// If error can not be handled In a higher level then it can be wrapped by another error, which on its own can be enriched with more context information and details and finaly
 /// loged.
-public protocol BaseError: LocalizedError, CustomNSError, CustomStringConvertible, CustomDebugStringConvertible {
+public protocol BaseError: LocalizedError, InformativeError, CustomNSError, CustomStringConvertible, CustomDebugStringConvertible {
   // MARK: - Properties that must be implemented:
   
   /// Двухбуквенный код домена. Example: AE
@@ -83,7 +85,7 @@ extension BaseError {
   /// The error code within the given domain.
   public var errorCode: Int { code }
   
-  public var errorUserInfo: [String: Any] { summaryErrorInfo._asStringDict } // TODO: StringDict or raw errorInfo.storage?
+  public var errorUserInfo: [String: Any] { summaryErrorInfo.asStringDict } // TODO: StringDict or raw errorInfo.storage?
   
   public var domain: String { Self.errorDomain }
 }
@@ -122,7 +124,7 @@ extension BaseError {
   ///
   /// Example: AE14
   public var shortCode: String {
-    let shortCode = [domainShortCode, "\(code)", identitySuffix.map { "@" + $0 }].compactMap().joined()
+    let shortCode = [domainShortCode, "\(code)", identitySuffix.map { "@" + $0 }].compacted().joined()
     return code >= 0 ? shortCode : "`\(shortCode)`"
   }
   
@@ -225,12 +227,14 @@ extension BaseError {
     let underlyingInfo = (underlying?._summaryInfo ?? [:])
     
     lazy var depthIndex = depthIndex
-    let summary = Self.impFuncs.mergeInfo(info.storage,
-                                          onDepthWithIndex: depthIndex,
-                                          errorDomainShortCode: domainShortCode,
-                                          errorCode: code,
-                                          withUnderlying: underlyingInfo)
-    return summary
+//    let summary = Self.impFuncs.mergeInfo(info.storage,
+//                                          onDepthWithIndex: depthIndex,
+//                                          errorDomainShortCode: domainShortCode,
+//                                          errorCode: code,
+//                                          withUnderlying: underlyingInfo)
+//    return summary
+    // TODO: - .
+    fatalError()
   }
   
   /// primaryUserInfo, собранный из всей цепочки ошибок
@@ -238,19 +242,23 @@ extension BaseError {
     let underlyingInfo = (underlying?._summaryPrimaryInfo ?? [:])
     
     lazy var depthIndex = depthIndex
-    let summary = Self.impFuncs.mergeInfo(primaryInfo.storage,
-                                          onDepthWithIndex: depthIndex,
-                                          errorDomainShortCode: domainShortCode,
-                                          errorCode: code,
-                                          withUnderlying: underlyingInfo)
-    return summary
+//    let summary = Self.impFuncs.mergeInfo(primaryInfo.storage,
+//                                          onDepthWithIndex: depthIndex,
+//                                          errorDomainShortCode: domainShortCode,
+//                                          errorCode: code,
+//                                          withUnderlying: underlyingInfo)
+//    return summary
+    // TODO: - .
+    fatalError()
   }
   
   /// userInfo + primaryUserInfo, собранные из всей цепочки ошибок
   public var summaryErrorInfo: ErrorInfo { // TODO: - ? make opaque type
-    let summary = Self.impFuncs.mergeSummaryErrorInfo(summaryPrimaryInfo: _summaryPrimaryInfo,
-                                                      summarySecondaryInfo: _summaryInfo)
-    return ErrorInfo(storage: summary)
+//    let summary = Self.impFuncs.mergeSummaryErrorInfo(summaryPrimaryInfo: _summaryPrimaryInfo,
+//                                                      summarySecondaryInfo: _summaryInfo)
+//    return ErrorInfo(storage: summary)
+    // TODO: - .
+    fatalError()
   }
 }
 
@@ -361,13 +369,14 @@ extension BaseErrorImpFunctions { // MARK: fileprivate usage only
     -> [String: any ErrorInfo.ValueType] {
     var info = summarySecondaryInfo
     
-    for (key, value) in summaryPrimaryInfo {
-      _addResolvingKeyCollisions(key: key,
-                                 value: value,
-                                 firstSuffix: { "_r" + BaseErrorImpFunctions.randomSuffix() },
-                                 otherSuffix: BaseErrorImpFunctions.randomSuffix,
-                                 to: &info)
-    } // end keyValueLoop
+//    for (key, value) in summaryPrimaryInfo {
+//      _addResolvingKeyCollisions(key: key,
+//                                 value: value,
+//                                 firstSuffix: { "_r" + BaseErrorImpFunctions.randomSuffix() },
+//                                 otherSuffix: BaseErrorImpFunctions.randomSuffix,
+//                                 to: &info)
+//    } // end keyValueLoop
+      // TODO: - .
     
     return info
   }

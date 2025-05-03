@@ -87,7 +87,7 @@ public final class URLSessionError: ConcreteBaseError {
 
 extension URLSessionError {
   public func asNSError() -> NSError {
-    NSError(domain: NSURLErrorDomain, code: code, userInfo: info._asStringDict)
+    NSError(domain: NSURLErrorDomain, code: code, userInfo: info.asStringDict)
   }
 }
 
@@ -261,65 +261,61 @@ public enum URLSessionErrorCode: CaseIterable, BaseErrorCode {
   
   public var nsUrlErrorCode: Int {
     switch self {
-    case .unknown: return NSURLErrorUnknown
-    case .cancelled: return NSURLErrorCancelled
-    case .badURL: return NSURLErrorBadURL
-    case .timeOut: return NSURLErrorTimedOut
-    case .unsupportedURL: return NSURLErrorUnsupportedURL
-    case .cannotFindHost: return NSURLErrorCannotFindHost
-    case .cannotConnectToHost: return NSURLErrorCannotConnectToHost
-    case .networkConnectionLost: return NSURLErrorNetworkConnectionLost
-    case .dNSLookupFailed: return NSURLErrorDNSLookupFailed
-    case .httpTooManyRedirects: return NSURLErrorHTTPTooManyRedirects
-    case .resourceUnavailable: return NSURLErrorResourceUnavailable
-    case .notConnectedToInternet: return NSURLErrorNotConnectedToInternet
-    case .redirectToNonExistentLocation: return NSURLErrorRedirectToNonExistentLocation
-    case .badServerResponse: return NSURLErrorBadServerResponse
-    case .userCancelledAuthentication: return NSURLErrorUserCancelledAuthentication
-    case .userAuthenticationRequired: return NSURLErrorUserAuthenticationRequired
-    case .zeroByteResource: return NSURLErrorZeroByteResource
-    case .cannotDecodeRawData: return NSURLErrorCannotDecodeRawData
-    case .cannotDecodeContentData: return NSURLErrorCannotDecodeContentData
-    case .cannotParseResponse: return NSURLErrorCannotParseResponse
+    case .unknown: NSURLErrorUnknown
+    case .cancelled: NSURLErrorCancelled
+    case .badURL: NSURLErrorBadURL
+    case .timeOut: NSURLErrorTimedOut
+    case .unsupportedURL: NSURLErrorUnsupportedURL
+    case .cannotFindHost: NSURLErrorCannotFindHost
+    case .cannotConnectToHost: NSURLErrorCannotConnectToHost
+    case .networkConnectionLost: NSURLErrorNetworkConnectionLost
+    case .dNSLookupFailed: NSURLErrorDNSLookupFailed
+    case .httpTooManyRedirects: NSURLErrorHTTPTooManyRedirects
+    case .resourceUnavailable: NSURLErrorResourceUnavailable
+    case .notConnectedToInternet: NSURLErrorNotConnectedToInternet
+    case .redirectToNonExistentLocation: NSURLErrorRedirectToNonExistentLocation
+    case .badServerResponse: NSURLErrorBadServerResponse
+    case .userCancelledAuthentication: NSURLErrorUserCancelledAuthentication
+    case .userAuthenticationRequired: NSURLErrorUserAuthenticationRequired
+    case .zeroByteResource: NSURLErrorZeroByteResource
+    case .cannotDecodeRawData: NSURLErrorCannotDecodeRawData
+    case .cannotDecodeContentData: NSURLErrorCannotDecodeContentData
+    case .cannotParseResponse: NSURLErrorCannotParseResponse
+    case .appTransportSecurityRequiresSecureConnection: NSURLErrorAppTransportSecurityRequiresSecureConnection
+    case .fileDoesNotExist: NSURLErrorFileDoesNotExist
+    case .fileIsDirectory: NSURLErrorFileIsDirectory
+    case .noPermissionsToReadFile: NSURLErrorNoPermissionsToReadFile
+    case .dataLengthExceedsMaximum: NSURLErrorDataLengthExceedsMaximum
+    case .fileOutsideSafeArea: NSURLErrorFileOutsideSafeArea
       
-    case .appTransportSecurityRequiresSecureConnection: return NSURLErrorAppTransportSecurityRequiresSecureConnection
-    case .fileDoesNotExist: return NSURLErrorFileDoesNotExist
-    case .fileIsDirectory: return NSURLErrorFileIsDirectory
-    case .noPermissionsToReadFile: return NSURLErrorNoPermissionsToReadFile
-    case .dataLengthExceedsMaximum: return NSURLErrorDataLengthExceedsMaximum
-    case .fileOutsideSafeArea: return NSURLErrorFileOutsideSafeArea
+    // MARK: SSL errors
+    case .secureConnectionFailed: NSURLErrorSecureConnectionFailed
+    case .serverCertificateHasBadDate: NSURLErrorServerCertificateHasBadDate
+    case .serverCertificateUntrusted: NSURLErrorServerCertificateUntrusted
+    case .serverCertificateHasUnknownRoot: NSURLErrorServerCertificateHasUnknownRoot
+    case .serverCertificateNotYetValid: NSURLErrorServerCertificateNotYetValid
+    case .clientCertificateRejected: NSURLErrorClientCertificateRejected
+    case .clientCertificateRequired: NSURLErrorClientCertificateRequired
+    case .cannotLoadFromNetwork: NSURLErrorCannotLoadFromNetwork
       
-      // MARK: SSL errors
+    // MARK: Download and file I/O errors
+    case .cannotCreateFile: NSURLErrorCannotCreateFile
+    case .cannotOpenFile: NSURLErrorCannotOpenFile
+    case .cannotCloseFile: NSURLErrorCannotCloseFile
+    case .cannotWriteToFile: NSURLErrorCannotWriteToFile
+    case .cannotRemoveFile: NSURLErrorCannotRemoveFile
+    case .cannotMoveFile: NSURLErrorCannotMoveFile
+    case .downloadDecodingFailedMidStream: NSURLErrorDownloadDecodingFailedMidStream
+    case .downloadDecodingFailedToComplete: NSURLErrorDownloadDecodingFailedToComplete
       
-    case .secureConnectionFailed: return NSURLErrorSecureConnectionFailed
-    case .serverCertificateHasBadDate: return NSURLErrorServerCertificateHasBadDate
-    case .serverCertificateUntrusted: return NSURLErrorServerCertificateUntrusted
-    case .serverCertificateHasUnknownRoot: return NSURLErrorServerCertificateHasUnknownRoot
-    case .serverCertificateNotYetValid: return NSURLErrorServerCertificateNotYetValid
-    case .clientCertificateRejected: return NSURLErrorClientCertificateRejected
-    case .clientCertificateRequired: return NSURLErrorClientCertificateRequired
-    case .cannotLoadFromNetwork: return NSURLErrorCannotLoadFromNetwork
-      
-      // MARK: Download and file I/O errors
-      
-    case .cannotCreateFile: return NSURLErrorCannotCreateFile
-    case .cannotOpenFile: return NSURLErrorCannotOpenFile
-    case .cannotCloseFile: return NSURLErrorCannotCloseFile
-    case .cannotWriteToFile: return NSURLErrorCannotWriteToFile
-    case .cannotRemoveFile: return NSURLErrorCannotRemoveFile
-    case .cannotMoveFile: return NSURLErrorCannotMoveFile
-    case .downloadDecodingFailedMidStream: return NSURLErrorDownloadDecodingFailedMidStream
-    case .downloadDecodingFailedToComplete: return NSURLErrorDownloadDecodingFailedToComplete
-      
-      // MARK: Others
-      
-    case .internationalRoamingOff: return NSURLErrorInternationalRoamingOff
-    case .callIsActive: return NSURLErrorCallIsActive
-    case .dataNotAllowed: return NSURLErrorDataNotAllowed
-    case .requestBodyStreamExhausted: return NSURLErrorRequestBodyStreamExhausted
-    case .backgroundSessionRequiresSharedContainer: return NSURLErrorBackgroundSessionRequiresSharedContainer
-    case .backgroundSessionInUseByAnotherProcess: return NSURLErrorBackgroundSessionInUseByAnotherProcess
-    case .backgroundSessionWasDisconnected: return NSURLErrorBackgroundSessionWasDisconnected
+    // MARK: Others
+    case .internationalRoamingOff: NSURLErrorInternationalRoamingOff
+    case .callIsActive: NSURLErrorCallIsActive
+    case .dataNotAllowed: NSURLErrorDataNotAllowed
+    case .requestBodyStreamExhausted: NSURLErrorRequestBodyStreamExhausted
+    case .backgroundSessionRequiresSharedContainer: NSURLErrorBackgroundSessionRequiresSharedContainer
+    case .backgroundSessionInUseByAnotherProcess: NSURLErrorBackgroundSessionInUseByAnotherProcess
+    case .backgroundSessionWasDisconnected: NSURLErrorBackgroundSessionWasDisconnected
     }
   }
 }
