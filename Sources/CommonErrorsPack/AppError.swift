@@ -44,13 +44,13 @@ public final class AppError: ConcreteBaseError {
     self.localizedMessage = localizedMessage
   }
   
-  public convenience init(errorCode: ErrorCode,
+  public convenience init(code: ErrorCode,
                           localizedMessage: String,
                           underlyingError: (any BaseError)? = nil,
                           info: ErrorInfo = [:],
                           file: StaticString = #fileID,
                           line: UInt = #line) {
-    self.init(_errorCode: errorCode,
+    self.init(_errorCode: code,
               localizedMessage: localizedMessage,
               underlyingError: underlyingError,
               info: info,

@@ -33,9 +33,6 @@ public protocol BaseError: LocalizedError, InformativeError, CustomNSError, Cust
   /// при показе ошибок. Например URL запроса или название проперти, которую не удалось замапить.
   var primaryInfo: ErrorInfo { get }
   
-  /// [String: Any].Type has one benefit prior to Ordered / Sorted Dictionary – keys have different order.
-  /// if logging system has strong limit on number of key-value pairs can be logged and drops ones that out of limit, it is not so big problem when keys have different order.
-  /// Each log in such situation will have different key-value pairs,  though not full. From this mosaic full picture can be restored.
   var info: ErrorInfo { get }
   
   /// The same as Localized Description
@@ -49,7 +46,7 @@ public protocol BaseError: LocalizedError, InformativeError, CustomNSError, Cust
   /// Числовой код ошибки. Нужен и используется для логирования. Название сделано таким же, как и у нативной NSError.
   /// Реализовывать какое-либо поведение, основываясь на значении этой проперти не следует, т.к
   /// одно и то же значение (например 2) у разных ошибок имеет разные смыслы.
-  var code: Int { get }
+  var intCode: Int { get }
     
   /// Некоторые ошибки могут иметь значение в этой проперти. Это имеет смысл, однако, не для всех Типов ошибок.
   ///
@@ -63,7 +60,7 @@ public protocol BaseError: LocalizedError, InformativeError, CustomNSError, Cust
   
   /// Human readable debug details
   /// Дополнительная информация для разработки, которая не будет отображаться пользователю.
-  var debugDetails: String? { get }
+//  var debugDetails: String? { get }
   
   /// В большинстве случаев нужна именно дефолтная имплементация.
   /// Однако бывают случаи, когда полная цепочка кодов не подходит для логирования и мониторинга в нонфаталах.
@@ -79,11 +76,13 @@ public protocol BaseError: LocalizedError, InformativeError, CustomNSError, Cust
 // Для случаев, когда ошибка передаётся как Error, делаем дефолтную реализацию, чтоб нативные _domain и _code возвращали
 // корректное значение. Аналогично и с полями NSError.code, NSError.domain, NSError.userInfo
 
+// TODO: ? убрать CustomNSError из протокола и добавить к конкретным типам?
+
 extension BaseError {
   public static var errorDomain: String { "\(Self.self)" }
   
   /// The error code within the given domain.
-  public var errorCode: Int { code }
+  public var errorCode: Int { intCode }
   
   public var errorUserInfo: [String: Any] { summaryErrorInfo.asStringDict } // TODO: StringDict or raw errorInfo.storage?
   
@@ -124,13 +123,13 @@ extension BaseError {
   ///
   /// Example: AE14
   public var shortCode: String {
-    let shortCode = [domainShortCode, "\(code)", identitySuffix.map { "@" + $0 }].compacted().joined()
-    return code >= 0 ? shortCode : "`\(shortCode)`"
+    let shortCode = [domainShortCode, "\(intCode)", identitySuffix.map { "@" + $0 }].compacted().joined()
+    return intCode >= 0 ? shortCode : "`\(shortCode)`"
   }
   
   /// Example: ApiServiceError.unretriable
   public var fullName: String {
-    Self.errorDomain + "." + ((self as? any ConcreteBaseError)?.errorCode.codeName ?? "\(code)")
+    Self.errorDomain + "." + ((self as? any ConcreteBaseError)?.errorCode.codeName ?? "\(intCode)")
   }
   
   public var fullNamesChain: String {
@@ -283,7 +282,7 @@ public protocol ConcreteBaseError: BaseError {
 extension ConcreteBaseError {
   // MARK: Default Imp
   
-  public var code: Int { errorCode.rawValue }
+  public var intCode: Int { errorCode.rawValue }
 }
 
 extension KeyPath {

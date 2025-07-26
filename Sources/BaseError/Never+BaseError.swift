@@ -15,7 +15,7 @@ extension Swift.Never: BaseError {
     switch self {}
   }
   
-  public var code: Int {
+  public var intCode: Int {
     switch self {}
   }
   

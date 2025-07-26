@@ -28,7 +28,7 @@ public final class JsonMappingError: ConcreteBaseError {
   
   public let identitySuffix: String?
   
-  private init(errorCode: ErrorCode,
+  private init(code: ErrorCode,
                debugMessage: String?,
                underlyingError: (any BaseError)?,
                primaryInfo: ErrorInfo,
@@ -36,7 +36,7 @@ public final class JsonMappingError: ConcreteBaseError {
                identity: String?,
                file: StaticString,
                line: UInt) {
-    self.errorCode = errorCode
+    self.errorCode = code
     underlying = underlyingError
     self.identitySuffix = identity.map { Self.impFuncs.shortCodeOf(identity: $0) }
     debugDetails = debugMessage
@@ -52,7 +52,7 @@ public final class JsonMappingError: ConcreteBaseError {
   
   /// Для случаев, когда параметры file и line нужно прокинуть из другой функции
   public convenience init(code: ErrorCode, info: ErrorInfo = [:], file: StaticString, line: UInt) {
-    self.init(errorCode: code,
+    self.init(code: code,
               debugMessage: nil,
               underlyingError: nil,
               primaryInfo: [:],
@@ -68,7 +68,7 @@ public final class JsonMappingError: ConcreteBaseError {
                           info: ErrorInfo = [:],
                           file: StaticString = #fileID,
                           line: UInt = #line) {
-    self.init(errorCode: code,
+    self.init(code: code,
               debugMessage: nil,
               underlyingError: nil,
               primaryInfo: ["rawValue": rawValue],
@@ -87,7 +87,7 @@ public final class JsonMappingError: ConcreteBaseError {
                              info: ErrorInfo = [:],
                              file: StaticString = #fileID,
                              line: UInt = #line) {
-    self.init(errorCode: code,
+    self.init(code: code,
               debugMessage: debugMessage,
               underlyingError: underlyingError,
               primaryInfo: [Self.infoKeys.typeTKey: "\(typeOfValue)"],

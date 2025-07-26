@@ -30,13 +30,13 @@ public final class ConditionalError: ConcreteBaseError { // TODO: - make it a st
   /// У этой ошибки всегда показываем код
   public let providesCodeChain = true
   
-  private init(errorCode: ConditionalErrorCode,
+  private init(code: ConditionalErrorCode,
                debugMessage: String?,
                underlyingError: (any BaseError)?,
                info: ErrorInfo,
                file: StaticString,
                line: UInt) {
-    self.errorCode = errorCode
+    self.errorCode = code
     underlying = underlyingError
         
     debugDetails = debugMessage
@@ -54,7 +54,7 @@ public final class ConditionalError: ConcreteBaseError { // TODO: - make it a st
                           info: ErrorInfo = [:],
                           file: StaticString = #fileID,
                           line: UInt = #line) {
-    self.init(errorCode: code, debugMessage: debugMessage, underlyingError: nil, info: info, file: file, line: line)
+    self.init(code: code, debugMessage: debugMessage, underlyingError: nil, info: info, file: file, line: line)
   }
   
   public convenience init(code: ConditionalErrorCode,
@@ -63,7 +63,7 @@ public final class ConditionalError: ConcreteBaseError { // TODO: - make it a st
                           info: ErrorInfo = [:],
                           file: StaticString = #fileID,
                           line: UInt = #line) {
-    self.init(errorCode: code,
+    self.init(code: code,
               debugMessage: debugMessage,
               underlyingError: underlyingError,
               info: info,
@@ -79,7 +79,7 @@ extension ConditionalError {
                                       file: StaticString = #fileID,
                                       line: UInt = #line) -> ConditionalError {
     let message = "invalid index \(index) for " + ". Array count: \(arrayCount)."
-    return ConditionalError(errorCode: .indexOutOfBounds,
+    return ConditionalError(code: .indexOutOfBounds,
                             debugMessage: message,
                             underlyingError: nil,
                             info: [:],
@@ -92,7 +92,7 @@ extension ConditionalError {
                                      file: StaticString = #fileID,
                                      line: UInt = #line) -> ConditionalError {
     let message = "Unexpected value '\(valueName)': \(value)"
-    return ConditionalError(errorCode: .unexpectedValue,
+    return ConditionalError(code: .unexpectedValue,
                             debugMessage: message,
                             underlyingError: nil,
                             info: [:],

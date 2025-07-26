@@ -11,7 +11,7 @@ import Foundation
 public final class AnyBaseError: BaseError {
   public let fullName: String = String(describing: AnyBaseError.self)
 
-  public let code: Int
+  public let intCode: Int
 
   public let domainShortCode: String
 
@@ -36,7 +36,7 @@ public final class AnyBaseError: BaseError {
                localizedMessage: String,
                debugDescription: String?,
                info: ErrorInfo) {
-    self.code = code
+    self.intCode = code
     domainShortCode = domain
     self.domain = domain
     
@@ -56,7 +56,7 @@ public final class AnyBaseError: BaseError {
 extension AnyBaseError {
   public convenience init(error: any Error, info: ErrorInfo = [:]) {
     if let baseError = error as? any BaseError {
-      self.init(code: baseError.code,
+      self.init(code: baseError.intCode,
                 domain: baseError.domain,
                 underlying: baseError,
                 localizedMessage: baseError.localizedMessage,

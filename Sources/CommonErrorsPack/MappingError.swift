@@ -28,7 +28,7 @@ public final class MappingError: ConcreteBaseError {
   
   public let providesCodeChain = true
   
-  public init(errorCode: ErrorCode,
+  public init(code: ErrorCode,
               localizedMessage: String? = nil,
               debugMessage: String? = nil,
               underlyingError: (any BaseError)? = nil,
@@ -36,7 +36,7 @@ public final class MappingError: ConcreteBaseError {
               info: ErrorInfo = [:],
               file: StaticString = #fileID,
               line: UInt = #line) {
-    self.errorCode = errorCode
+    self.errorCode = code
     underlying = underlyingError
         
     debugDetails = debugMessage
@@ -53,7 +53,7 @@ public final class MappingError: ConcreteBaseError {
   }
   
   public convenience init(code: ErrorCode, info: ErrorInfo = [:], file: StaticString = #fileID, line: UInt = #line) {
-    self.init(errorCode: code, debugMessage: nil, underlyingError: nil, info: info, file: file, line: line)
+    self.init(code: code, debugMessage: nil, underlyingError: nil, info: info, file: file, line: line)
   }
   
   /// - Parameters:
@@ -72,7 +72,7 @@ public final class MappingError: ConcreteBaseError {
     Self.impFuncs.processCodableError(codableError, responseData: jsonData, putInfoTo: &errorInfo)
     
     // пробуем скастить в BaseError. Это даст дополнительную информацию в логах
-    self.init(errorCode: .codable,
+    self.init(code: .codable,
               debugMessage: nil,
               underlyingError: codableError as? any BaseError,
               info: errorInfo,
@@ -112,7 +112,7 @@ public final class MappingError: ConcreteBaseError {
 extension MappingError {
   public static func formatLogicalСontrolFailure<T>(value: T, file: StaticString = #fileID, line: UInt = #line) -> Self {
     let debugMessage = "Value \(value) is not logically valid, file: \(file) line: \(line)"
-    return Self(errorCode: .formatLogicalControl,
+    return Self(code: .formatLogicalControl,
                 debugMessage: debugMessage,
                 underlyingError: nil,
                 info: [:],
