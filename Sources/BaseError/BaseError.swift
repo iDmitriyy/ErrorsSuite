@@ -31,7 +31,7 @@ public protocol BaseError: LocalizedError, InformativeError, CustomNSError, Cust
   
   /// Словарь с дополнительной информацией. Здесь содержится важная информация, которую нужно видеть в DEBUG сборках
   /// при показе ошибок. Например URL запроса или название проперти, которую не удалось замапить.
-  var primaryInfo: ErrorInfo { get }
+//  var primaryInfo: ErrorInfo { get }
   
   var info: ErrorInfo { get }
   

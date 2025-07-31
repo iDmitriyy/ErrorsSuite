@@ -1,75 +1,11 @@
 //
-//  BaseErrorImpFunctions.swift
-//  swifty-kit
+//  IdentitySuffix.swift
+//  errors-suite
 //
-//  Created by Dmitriy Ignatyev on 14.12.2024.
+//  Created by Dmitriy Ignatyev on 28/07/2025.
 //
 
-private import struct Foundation.Data
-private import struct Foundation.Date
-private import struct Foundation.TimeZone
-private import struct Foundation.Calendar
-private import class Foundation.DateFormatter
 private import FoundationExtensions
-
-extension BaseErrorImpFunctions {
-  /// 512
-  public static let stringValMaxLength: Int = 512
-  /// 50
-  public static let dictKeyMaxLength: Int = 50
-  
-  /// Date.now() in `yyyyMMddTHHmmssxxx` format with .current timeZone
-  public static var dateWithTimeZone: String {
-    Date.now.string(withFormat: "yyyy-MM-dd'T'HH:mm:ssxxx", timeZone: .current, calendar: .current)
-  }
-}
-
-extension Date {
-  fileprivate func string(withFormat format: String, timeZone: TimeZone, calendar _: Calendar) -> String {
-    var calendar = Calendar(identifier: .gregorian) // LocalDateGregorian.calendarIdentifier
-    calendar.timeZone = timeZone
-    
-    let formatter = DateFormatter()
-    formatter.dateFormat = format
-    formatter.calendar = calendar
-    formatter.timeZone = timeZone
-    
-    return formatter.string(from: self)
-  }
-}
-
-extension BaseErrorImpFunctions {
-  /// - Parameters:
-  ///   - fileId: #fileID
-  ///   - line: #line
-  ///   - domainShortCode: domainShortCode of BaseError
-  /// - Returns: key-value tuple  for error info dict. Example: fileLineKey – "#BE_file_line", fileLineValue – "ModuleName.FileName, line: 4"
-  public static func fileLine(fileId: StaticString,
-                              line: UInt,
-                              domainShortCode: String) -> (fileLineKey: String, fileLineValue: String) {
-    let fileLineKey = "#" + domainShortCode + "_file_line"
-    let fileLine = "\(fileId), line: \(line)"
-    return (fileLineKey, fileLine)
-  }
-}
-
-// MARK: - Approximately Equal
-
-extension BaseErrorImpFunctions {
-  /// Позволяет сравнивать 2 instance'a Типа Any, когда не нужно заниматься приведением Типов.
-  /// Изначально сделан для сравнения значений в словарях Типа [String: Any].
-  public static func isApproximatelyEqual<T>(_ lhs: T, _ rhs: T) -> Bool {
-    if let lhs = lhs as? (any Hashable), let rhs = rhs as? (any Hashable) {
-      // Используем AnyHashable для сравнения, т.к. внутри него уже нужный алгоритм сравнения разных значений и Типов
-      // Достаточно было бы AnyEquatable, но такого нет
-      AnyHashable(lhs) == AnyHashable(rhs)
-    } else {
-      String(describing: lhs) == String(describing: rhs)
-    }
-  }
-  // ⚠️ @iDmitriyy
-  // TODO: - check Numerics library imp
-}
 
 // MARK: - BaseError Identity suffix
 
@@ -116,7 +52,7 @@ extension BaseErrorImpFunctions {
 
 extension BaseErrorImpFunctions {
   /// Returns short code (short identity) for error/warning logs. Max length is equal to 3 symbols (unicode scalars).
-  /// Expected input is file name / #fileID, Type name, event name, screen name, component / service name or other name meaningful as as place where error did happen.
+  /// Expected input is file name / #fileID, Type name, event name, screen name, component / service name or other name meaningful as a place where error did happen.
   /// This method better reflects source name  than `shortCodeOf(identity:)` (e.g. for for "SearchResponse" output is SeR instead of "SRe")
   /// and is better optimized for both memory and speed.
   /// Examples:
@@ -303,96 +239,3 @@ extension CharacterSet {
   fileprivate static let shortCodePrimary = CharacterSet.uppercaseLetters.union(.decimalDigits)
   fileprivate static let shortCodeAll = shortCodePrimary.union(.lowercaseLetters)
 }
-
-// MARK: - put Data as String
-
-extension BaseErrorImpFunctions {
-  /// Добавляет data в словарь, расценивая её как UTF8. Если размер data == 0, добавит сообщение о нулевом размере.
-  /// Если данные превышают размер, который можно отправить в нонфаталы, будут отправлены первые и последние 512 символов.
-  /// В ином случае отправит полностью.
-  public static func putDataAsString(_ data: Data, to errorInfo: inout ErrorInfo) {
-    // В случае .dataCorrupted отправляем кусок ответа, чтоб было понятно что там приходит. Часто бэк отправляет html
-    // вместо json'a при 500 ответах.
-    guard !data.isEmpty else {
-      errorInfo["dataString"] = "`Data has zero bytes length`"
-      return
-    }
-    // ⚠️ @iDmitriyy
-    // TODO: - make ErrorInfo protocol extensions
-    // make this func package ACL, errorInfo: inout shpuld be generic (aka DictUnifying protocol)
-    let stringMaxLength = Self.stringValMaxLength
-    // (префикс + суффикс) + (небольшой запас для символов > 1 байта)
-    let dataMaxLength = (stringMaxLength * 2) + (stringMaxLength / 16)
-    
-    let dataString = String(decoding: data, as: UTF8.self)
-    if data.count <= dataMaxLength, dataString.count <= stringMaxLength {
-      // проверяем data.count < maxLength, т.к. Character'ов может быт немного, а байтах это большой объём.
-      // кол-во символов в строке будет <= кол-ву байт, т.к. Character занимает минимум 1 байт
-      errorInfo["dataString"] = dataString
-    } else {
-      errorInfo["data bytes count"] = data.count
-      errorInfo["dataString first \(stringMaxLength) chars"] = dataString.prefix(stringMaxLength).apply(String.init)
-      errorInfo["dataString last \(stringMaxLength) chars"] = dataString.suffix(stringMaxLength).apply(String.init)
-    }
-  }
-}
-
-// MARK: - Process CodableError
-
-extension BaseErrorImpFunctions {
-  public static func processCodableError(_ codableError: any Error,
-                                         responseData: Data?,
-                                         putInfoTo outerErrorInfo: inout ErrorInfo) {
-    var localInfo: ErrorInfo = [:]
-    let codableErrorInfo: ErrorInfo
-    defer {
-      ErrorInfo.merge(localInfo, to: &outerErrorInfo)
-      ErrorInfo.merge(codableErrorInfo, to: &outerErrorInfo)
-    }
-    
-    func getCodableErrorInfo() -> ErrorInfo { ErrorInfo(legacyUserInfo: (codableError._userInfo as? [String: Any]) ?? [:]) }
-    
-    let debugMessage: (key: String, message: String)?
-    if let decodingError = codableError as? DecodingError {
-      debugMessage = ("DecodingError debugMessage", decodingError.humanReadableDescription)
-      // Дата нужна, чтобы потом в логах бэка можно было найти полный json ответа
-      localInfo[BaseErrorUserInfoKey.decodingDateKey] = Self.dateWithTimeZone
-      switch decodingError {
-      case .typeMismatch:
-        break
-      case .valueNotFound:
-        break
-      case .keyNotFound:
-        break
-      case .dataCorrupted:
-        // В случае .dataCorrupted отправляем кусок ответа, чтоб было понятно что там приходит. Часто бэк отправляет html
-        // вместо json'a при 500 ответах.
-        if let responseData { Self.putDataAsString(responseData, to: &localInfo) }
-      @unknown default:
-        break
-      }
-      codableErrorInfo = getCodableErrorInfo()
-    } else if let encodingError = codableError as? EncodingError {
-      debugMessage = ("EncodingError debugMessage", encodingError.humanReadableDescription)
-      codableErrorInfo = getCodableErrorInfo()
-    } else if codableError is any BaseError {
-      debugMessage = nil
-      codableErrorInfo = [:]
-    } else {
-      // Improvements: этот код пересекается с обработкой в AnyBaseError
-      // имеет смысл возвращать (any BaseError)?, если удалось скастить в BaseError или AnyBaseError, если ошибка не является
-      // ни Codable ошибкой на BaseError Типом
-      localInfo["raw_error_code"] = codableError._code
-      localInfo["raw_error_domain"] = codableError._domain
-      localInfo["raw_error_localized_description"] = codableError.localizedDescription
-      debugMessage = ("raw_error_debugDescr", String(reflecting: codableError))
-      codableErrorInfo = getCodableErrorInfo()
-    }
-    
-    if let debugMessage { localInfo[debugMessage.key] = debugMessage.message }
-  }
-}
-
-// ⚠️ @iDmitriyy
-// TODO: - ADD compile flag for configuration of constants either with default values nor some other mechanism –
-// complie string-flag, conformance for special type, etc.
